@@ -133,11 +133,24 @@ class minifyStuff_Admin {
 			<input type="hidden" name="minify_stuff_submit_hidden" value="Y">
 			<table border="1" class="form-table" >
 				<tbody>
+					<tr>
+						<td>
+							<p class="description"><?php esc_html_e( 'Option', 'minify-stuff-markup' ); ?></p>
+						</td>
+						<td>
+							<p class="description"><?php esc_html_e( 'Setting', 'minify-stuff-markup' ); ?></p>
+						</td>
+						<td>
+							<p class="description"><?php esc_html_e( 'Description', 'minify-stuff-markup' ); ?></p>
+						</td>
+					</tr>
 					<tr class="minify_stuff_active">
 						<th><label><?php esc_html_e( 'Minify Stuff', 'minify-stuff-markup' ); ?></label></th>
 						<td>
 							<input type="radio" name="minify_stuff_active" value="yes"<?php echo ($minify_stuff_active=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Enable', 'minify-stuff-markup' ); ?></strong></span>
 							<input type="radio" name="minify_stuff_active" value="no"<?php echo ($minify_stuff_active!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'Disable', 'minify-stuff-markup' ); ?></span>
+						</td>
+						<td>
 							<p class="description"><?php esc_html_e( 'Enable or disable Minify Stuff', 'minify-stuff-markup' ); ?></p>
 						</td>
 					</tr>
@@ -146,7 +159,9 @@ class minifyStuff_Admin {
 						<td>
 							<input type="radio" name="minify_javascript" value="yes"<?php echo ($minify_javascript=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Yes', 'minify-stuff-markup' ); ?></strong></span>
 							<input type="radio" name="minify_javascript" value="no"<?php echo ($minify_javascript!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'No', 'minify-stuff-markup' ); ?></span>
-							<p class="description"><?php esc_html_e( 'This option is typically safe to set to "Yes"', 'minify-stuff-markup' ); ?></p>
+						</td>
+						<td>
+							<p class="description"><?php esc_html_e( 'Default "Yes"', 'minify-stuff-markup' ); ?></p>
 						</td>
 					</tr>
 					<tr class="minify_comments minify_stuff_options">
@@ -154,7 +169,9 @@ class minifyStuff_Admin {
 						<td>
 							<input type="radio" name="minify_comments" value="yes"<?php echo ($minify_comments=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Yes', 'minify-stuff-markup' ); ?></strong></span>
 							<input type="radio" name="minify_comments" value="no"<?php echo ($minify_comments!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'No', 'minify-stuff-markup' ); ?></span>
-							<p class="description"><?php esc_html_e( 'This option is typically safe to set to "Yes"', 'minify-stuff-markup' ); ?></p>
+						</td>
+						<td>
+							<p class="description"><?php esc_html_e( 'Default "Yes"', 'minify-stuff-markup' ); ?></p>
 						</td>
 					</tr>
 			<p class="submit">
