@@ -111,12 +111,27 @@ class minifyStuff_Admin {
 	}
 
 	public function minify_stuff_menu_options() {
-		//$minify_stuff_active = get_option( 'minify_stuff_active' );
-		//$minify_javascript = get_option( 'minify_javascript' );
-		//$minify_comments = get_option( 'minify_comments' );
-		$minify_stuff_active = 'yes';
-		$minify_javascript = 'yes';
-		$minify_comments = 'yes';
+		$minify_stuff_active = get_option( 'minify_stuff_active' );
+		$minify_javascript = get_option( 'minify_javascript' );
+		$minify_comments = get_option( 'minify_comments' );
+		//$minify_stuff_active = 'yes';
+		//$minify_javascript = 'yes';
+		//$minify_comments = 'yes';
+		if ( !$minify_stuff_active ) $minify_stuff_active = 'yes';
+		if ( !$minify_javascript ) $minify_javascript = 'yes';
+		if ( !$minify_comments ) $minify_comments = 'yes';
+		if ( isset($_POST[ 'minify_stuff_submit_hidden' ]) && $_POST[ 'minify_stuff_submit_hidden' ] == 'Y' ) {
+			if ( isset( $_POST['minify_html_nonce'] ) && !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['minify_html_nonce'] ) ), 'minify-html-nonce' ) ) {
+				wp_die( esc_html( 'Form failed nonce verification.' ) );
+			}
+			if ( isset( $_POST[ 'minify_stuff_active' ] ) ) $minify_stuff_active = filter_var ( wp_unslash( $_POST[ 'minify_stuff_active' ] ), FILTER_SANITIZE_FULL_SPECIAL_CHARS ); else $minify_stuff_active = 'yes';
+			if ( isset( $_POST[ 'minify_javascript' ] ) ) $minify_javascript = filter_var ( wp_unslash( $_POST[ 'minify_javascript' ] ), FILTER_SANITIZE_FULL_SPECIAL_CHARS ); else $minify_javascript = 'yes';
+			if ( isset( $_POST[ 'minify_comments' ] ) ) $minify_comments = filter_var ( wp_unslash( $_POST[ 'minify_comments' ] ), FILTER_SANITIZE_FULL_SPECIAL_CHARS ); else $minify_comments = 'yes';
+			update_option( 'minify_stuff_active', $minify_stuff_active );
+			update_option( 'minify_javascript', $minify_javascript );
+			update_option( 'minify_comments', $minify_comments );
+			echo '<div class="updated"><p><strong>' . esc_html( 'Settings saved.' ) . '</strong></p></div>';
+		}
 	?>
 	<style>
 	#minify_stuff label {white-space:nowrap}
@@ -165,7 +180,9 @@ class minifyStuff_Admin {
 						</td>
 					</tr>
 					<tr class="minify_comments minify_stuff_options">
-						<th><label><?php esc_html_e( 'Remove HTML, JavaScript and CSS comments', 'minify-stuff-markup' ); ?></label></th>
+						<th>
+							<label><?php esc_html_e( 'Remove comments of HTML, JavaScript and CSS', 'minify-stuff-markup' ); ?></label>
+						</th>
 						<td>
 							<input type="radio" name="minify_comments" value="yes"<?php echo ($minify_comments=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Yes', 'minify-stuff-markup' ); ?></strong></span>
 							<input type="radio" name="minify_comments" value="no"<?php echo ($minify_comments!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'No', 'minify-stuff-markup' ); ?></span>
