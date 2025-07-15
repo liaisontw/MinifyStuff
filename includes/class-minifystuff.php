@@ -170,6 +170,7 @@ class minifyStuff {
 
 		$plugin_public = new minifyStuff_Public( $this->get_plugin_name(), $this->get_version() );
 
+		$this->loader->add_action( 'template_redirect',  $plugin_public, 'init_minify_stuff' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
