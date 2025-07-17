@@ -39,7 +39,22 @@ class minifyStuff_Public {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
-	protected $action_start;
+
+	/**
+	 * The variables of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $begin, $stop, $linefeed("\n"), $c_return("\r")
+	 */
+
+	private	$linefeed 	= '\n';
+	private	$c_return	= '\r'; 
+	private $tab_key	= '\t';
+	private	$begin 		= '@minify-begin';
+	private	$stop  		= '@minify-stop';
+	
+
 
 	/**
 	 * Initialize the class and set its properties.
@@ -49,10 +64,8 @@ class minifyStuff_Public {
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
-
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -107,71 +120,108 @@ class minifyStuff_Public {
 		}
 	}
 
-	protected function minify_stuff_output($buffer) {
-		$minify_begin_token = '@minify-begin';
-		$minify_stop_token  = '@minify-stop';
-		$line_feed 			= chr(10);
-		$carriage_return	= chr(13);
+	private function string_begin_with($str, $strbegin) {
+		//$strbegin_len = strlen($strbegin)+1;
+		return ($strbegin == substr($str, 0));
+	}
 
-		//chr(13) is a 'carriage return'
-		if ( substr( ltrim( $buffer ), 0, 5) == '<?xml' ) {
+	private function css_handle($str) {
+		$str = preg_replace(
+			array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/(\s)+' . $mod), 
+			array('>', '<', '\\1'), 
+			$str, 100000);		
+			
+		//minify html comment
+		$str = preg_replace(
+			'!/\*[^*]*\*+([^/][^*]*\*+)*/!', 
+			'', 
+			$str, 100000);
+		$str = str_replace(array ($this->linefeed, ' {', '{ ', ' }', '} ', '( ', ' )', ' :', ': ', ' ;', '; ', ' ,', ', ', ';}'), array('', '{', '{', '}', '}', '(', ')', ':', ':', ';', ';', ',', ',', '}'), $str);
+		return $str;
+	}
+
+	private function js_handle($str) {
+		$split_element_array = explode($this->linefeed, $str);
+		$str = '';
+		foreach ($split_element_array as $split_element_element) {
+			if ( $split_element_element ) {
+				$str .= trim($split_element_element) . $this->linefeed;
+			}
+
+			$last = substr(trim($split_element_element), -1);
+
+			//minify js
+			if (   ( strpos($split_element_element, '//') !== false) 
+				&& (   $last == ';' || $last == '>' 
+					|| $last == '{' || $last == '}' || $last == ',') 
+			) {
+				$str .= $this->linefeed;
+			}
+		}
+
+		if ( $str ) {
+			//minify html comment
+			$str = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $str, 100000);
+
+			//minify js
+			$str = str_replace(array (';' . $this->linefeed, '>' . $this->linefeed, 
+									'{' . $this->linefeed, '}' . $this->linefeed, 
+									',' . $this->linefeed), 
+								array(';', '>', 
+									'{', '}', 
+									','), 
+								$str);
+		}
+		return $str;
+	}
+
+	protected function minify_stuff_output($buffer) {
+
+		if ( $this->string_begin_with(ltrim($buffer), '<?xml') ) {
 			return ( $buffer );
 		}
-		$mod = '/u';
-		//Chr(9)為Tab
-		//Chr(13)為歸位字元(回車符號)
-		$buffer = str_replace(array (chr(13) . $line_feed, chr(9)), array ($line_feed, ''), $buffer);
+		
+		$buffer = str_replace(
+			array ( $this->c_return . $this->linefeed, $this->tab_key), 
+		    array ( $this->linefeed, ''), 
+			$buffer);
 		$buffer = str_ireplace(
 			array ( '<script', '/script>', '<pre', '/pre>', 
 					'<textarea', '/textarea>', '<style', '/style>'), 
-			array ( $minify_begin_token.'<script', '/script>'.$minify_stop_token, 
-			        $minify_begin_token.'<pre', '/pre>'.$minify_stop_token, 
-					$minify_begin_token.'<textarea', '/textarea>'.$minify_stop_token, 
-					$minify_begin_token.'<style', '/style>'.$minify_stop_token), $buffer);
-		$split_array = explode($minify_stop_token, $buffer);
+			array ( $this->begin.'<script', '/script>'.$this->stop, 
+			        $this->begin.'<pre', '/pre>'.$this->stop, 
+					$this->begin.'<textarea', '/textarea>'.$this->stop, 
+					$this->begin.'<style', '/style>'.$this->stop), 
+			$buffer);
+		$split_array = explode($this->stop, $buffer);
 		$buffer = ''; 
 
+		$mod = '/u';
 		foreach ($split_array as $split_element) {
-			$ii = strpos($split_element, $minify_begin_token);
-			if ( $ii !== false ) {
-				$process = substr($split_element, 0, $ii);
-				$asis = substr($split_element, $ii + strlen($minify_begin_token));
-				if ( substr($asis, 0, 7) == '<script' ) {
-					$asis = '';
-					$split_element_array = explode($line_feed, $asis);
-					
-					foreach ($split_element_array as $split_element_element) {
-						if ( $split_element_element ) {
-							$asis .= trim($split_element_element) . $line_feed;
-						}
+			$begin_pos = strpos($split_element, $this->begin);
 
-						$last = substr(trim($split_element_element), -1);
-						if ( strpos($split_element_element, '//') !== false && ($last == ';' || $last == '>' || $last == '{' || $last == '}' || $last == ',') ) {
-							$asis .= $line_feed;
-						}
-					}
-
-					if ( $asis ) {
-						$asis = substr($asis, 0, -1);
-					}
-					$asis = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $asis, 100000);
-					$asis = str_replace(array (';' . $line_feed, '>' . $line_feed, '{' . $line_feed, '}' . $line_feed, ',' . $line_feed), array(';', '>', '{', '}', ','), $asis);
-					
-				} else if ( substr($asis, 0, 6) == '<style' ) {
-					$asis = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/(\s)+' . $mod), array('>', '<', '\\1'), $asis, 100000);				
-					$asis = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $asis, 100000);
-					$asis = str_replace(array ($line_feed, ' {', '{ ', ' }', '} ', '( ', ' )', ' :', ': ', ' ;', '; ', ' ,', ', ', ';}'), array('', '{', '{', '}', '}', '(', ')', ':', ':', ';', ';', ',', ',', '}'), $asis);
-				}
+			if ( $begin_pos === false ) {
+				$pre_begin = $split_element;
+				$post_begin = '';
 			} else {
-				$process = $split_element;
-				$asis = '';
-			}
-			$process = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/(\s)+' . $mod, '/"\n>' . $mod, '/"\n' . $mod), array('>', '<', '\\1', '">', '" '), $process, 100000);
-			$process = preg_replace('/(?=<!--)([\s\S]*?)-->' . $mod, '', $process, 100000);
-			$buffer .= $process.$asis;
+				$pre_begin = substr($split_element, 0, $begin_pos);
+				$post_begin = substr($split_element, $begin_pos + strlen($this->begin));
+
+				if ( $this->string_begin_with($post_begin, '<style') ) {
+					$post_begin = $this->css_handle($post_begin);
+				} else if ( $this->string_begin_with($post_begin, '<script') ) {	
+					$post_begin = $this->js_handle($post_begin);
+				}
+			} 
+			$pre_begin = preg_replace(array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/(\s)+' . $mod, '/"\n>' . $mod, '/"\n' . $mod), array('>', '<', '\\1', '">', '" '), $pre_begin, 100000);
+			$pre_begin = preg_replace('/(?=<!--)([\s\S]*?)-->' . $mod, '', $pre_begin, 100000);
+			$buffer .= $pre_begin.$post_begin;
 		}
-		$buffer = str_replace(array ($line_feed . '<script', $line_feed . '<style', '*/' . $line_feed, $minify_begin_token), 
-							  array ('<script', '<style', '*/', ''), $buffer);
+		$buffer = str_replace(array ($this->linefeed . '<script', $this->linefeed . '<style', 
+		                             '*/' . $this->linefeed     , $this->begin), 
+							  array ('<script'             ,  '<style', 
+							         '*/'                  , ''), 
+							  $buffer);
 		return ($buffer);
 	}
 }
