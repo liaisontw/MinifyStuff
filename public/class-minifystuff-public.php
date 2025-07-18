@@ -120,7 +120,7 @@ class minifyStuff_Public {
 		}
 	}
 
-	private function string_begin_with($str, $strbegin) {
+	private function str_begin($str, $strbegin) {
 		//$strbegin_len = strlen($strbegin)+1;
 		return ($strbegin == substr($str, 0));
 	}
@@ -141,17 +141,17 @@ class minifyStuff_Public {
 	}
 
 	private function js_handle($str) {
-		$split_element_array = explode($this->linefeed, $str);
+		$str_array = explode($this->linefeed, $str);
 		$str = '';
-		foreach ($split_element_array as $split_element_element) {
-			if ( $split_element_element ) {
-				$str .= trim($split_element_element) . $this->linefeed;
+		foreach ($str_array as $str_element) {
+			if ( $str_element ) {
+				$str .= trim($str_element) . $this->linefeed;
 			}
 
-			$last = substr(trim($split_element_element), -1);
+			$last = substr(trim($str_element), -1);
 
-			//minify js
-			if (   ( strpos($split_element_element, '//') !== false) 
+			//remove js comment
+			if (   ( strpos($str_element, '//') !== false) 
 				&& (   $last == ';' || $last == '>' 
 					|| $last == '{' || $last == '}' || $last == ',') 
 			) {
@@ -160,7 +160,7 @@ class minifyStuff_Public {
 		}
 
 		if ( $str ) {
-			//minify html comment
+			//remove html comment
 			$str = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $str, 100000);
 
 			//minify js
@@ -177,7 +177,7 @@ class minifyStuff_Public {
 
 	protected function minify_stuff_output($buffer) {
 
-		if ( $this->string_begin_with(ltrim($buffer), '<?xml') ) {
+		if ( $this->str_begin(ltrim($buffer), '<?xml') ) {
 			return ( $buffer );
 		}
 		
@@ -207,9 +207,9 @@ class minifyStuff_Public {
 				$pre_begin = substr($split_element, 0, $begin_pos);
 				$post_begin = substr($split_element, $begin_pos + strlen($this->begin));
 
-				if ( $this->string_begin_with($post_begin, '<style') ) {
+				if ( $this->str_begin($post_begin, '<style') ) {
 					$post_begin = $this->css_handle($post_begin);
-				} else if ( $this->string_begin_with($post_begin, '<script') ) {	
+				} else if ( $this->str_begin($post_begin, '<script') ) {	
 					$post_begin = $this->js_handle($post_begin);
 				}
 			} 
