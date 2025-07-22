@@ -31,8 +31,6 @@ class minifyStuff_Activator {
 	 */
 	public static function activate() {
 		add_option( 'minify_stuff_active', 'yes' );
-		add_option( 'minify_javascript', 'yes' );
-		add_option( 'minify_html_comments', 'yes' );
 	}
 
 }

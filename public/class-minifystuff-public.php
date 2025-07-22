@@ -52,8 +52,10 @@ class minifyStuff_Public {
 	public	$_c_return	= "\r"; 
 	public  $_tab_key	= "\t";
 	public	$begin 		= '@minify-begin@';
-	public	$stop  		= '@minify-end@';
+	public	$stop  		= '@minify-stop@';
 	public  $utf8_mod;
+	public  $max_replace = -1;
+
 
 
 	/**
@@ -127,20 +129,28 @@ class minifyStuff_Public {
 
 	public function css_handle($str) {
 		$linefeed = $this->_linefeed;
-		$mod = $this->utf8_mod;
+		$enc_mod = $this->utf8_mod;
 
 		$str = preg_replace(
-			array ('/\>[^\S ]+' . $mod, '/[^\S ]+\<' . $mod, '/(\s)+' . $mod), 
+			array ('/\>[^\S ]+' . $enc_mod, '/[^\S ]+\<' . $enc_mod,
+			       '/(\s)+' . $enc_mod), 
 			array('>', '<', '\\1'), 
-			$str, 100000);		
+			$str, $this->max_replace);		
 			
 		//minify html comment
 		$str = preg_replace(
 			'!/\*[^*]*\*+([^/][^*]*\*+)*/!', 
 			'', 
-			$str, 100000);
+			$str, $this->max_replace);
 
-		$str = str_replace(array ($linefeed, ' {', '{ ', ' }', '} ', '( ', ' )', ' :', ': ', ' ;', '; ', ' ,', ', ', ';}'), array('', '{', '{', '}', '}', '(', ')', ':', ':', ';', ';', ',', ',', '}'), $str);
+		$str = str_replace(
+			array ($linefeed, 
+			       ' {','{ ',' }','} ','( ',' )', 
+				   ' :',': ',' ;','; ',' ,',', ', ';}'), 
+			array (''       , 
+				   '{' , '{', '}', '}', '(', ')',
+				   ':' , ':', ';', ';', ',', ',', '}' ), 
+			$str);
 		return $str;
 	}
 
@@ -153,11 +163,12 @@ class minifyStuff_Public {
 			if ( $str_element ) {
 				$str .= trim($str_element) . $linefeed;
 			}
-			$last = substr(trim($str_element), -1);
+			$end_of_str = substr(trim($str_element), -1);
 			//remove js comment
 			if (   ( strpos($str_element, '//') !== false) 
-				&& (   $last == ';' || $last == '>' 
-					|| $last == '{' || $last == '}' || $last == ',') 
+				&& (   $end_of_str == ';' || $end_of_str == '>' 
+					|| $end_of_str == '{' || $end_of_str == '}' 
+					|| $end_of_str == ',') 
 			) {
 				$str .= $linefeed;
 			}
@@ -165,18 +176,19 @@ class minifyStuff_Public {
 
 		if ( $str ) {
 			$str = substr($str, 0, -1);
+			//remove html comment
+			$str = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', 
+			                    '', $str, $this->max_replace);
+			//minify js
+			$str = str_replace(
+				array (';' . $linefeed, '>' . $linefeed, 
+					   '{' . $linefeed, '}' . $linefeed, 
+					   ',' . $linefeed), 
+				array (';'            , '>', 
+					'{'               , '}', 
+					','), 
+				$str);
 		}
-		//remove html comment
-		$str = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $str, 100000);
-
-		//minify js
-		$str = str_replace(array (';' . $linefeed, '>' . $linefeed, 
-								'{' . $linefeed, '}' . $linefeed, 
-								',' . $linefeed), 
-							array(';', '>', 
-								'{', '}', 
-								','), 
-							$str);
 		
 		return $str;
 	}
@@ -188,25 +200,30 @@ class minifyStuff_Public {
 		$l_begin  = $this->begin;
 		$l_stop   = $this->stop;
 
+		//step 1: skip xml files
 		if ( $this->str_begin(ltrim($buffer), '<?xml') ) {
 			return ( $buffer );
 		}
-		$mod = ( mb_detect_encoding($buffer, 'UTF-8', true) ) ? '/u' : '/s';
-		$this->utf8_mod = $mod;
+
+		//step 2: utf-8 encode detection
+		$enc_mod = ( mb_detect_encoding($buffer, 'UTF-8', true) ) ? '/u' : '/s';
+		$this->utf8_mod = $enc_mod;
+
+		//step 3: compress \r\n\t to \n
 		$buffer = str_replace(
 			array ( $c_return . $linefeed, $tab_key), 
 		    array (             $linefeed,       ''), 
 			$buffer);
+
+		//step 4-1: add begin-stop token for js, css
 		$buffer = str_ireplace(
-			array (          '<script'  ,   '/script>', 
-					         '<style'   ,    '/style>', 
-							 '<pre'     ,      '/pre>', 
-					         '<textarea', '/textarea>'), 
-			array ( $l_begin.'<script'  ,   '/script>'.$l_stop, 
-					$l_begin.'<style'   ,    '/style>'.$l_stop, 
-					$l_begin.'<pre'     ,      '/pre>'.$l_stop, 
-					$l_begin.'<textarea', '/textarea>'.$l_stop), 
+			array (          '<script' , '/script>', 
+					         '<style'  ,  '/style>'), 
+			array ( $l_begin.'<script' , '/script>'.$l_stop, 
+					$l_begin.'<style'  ,  '/style>'.$l_stop), 
 			$buffer);
+
+		//step 4-2: split entire buffer into array by stop token
 		$split_array = explode($l_stop, $buffer);
 		$buffer = '';
 		foreach ($split_array as $split_element) {
@@ -225,23 +242,24 @@ class minifyStuff_Public {
 				}
 			} 
 			$pre_begin = preg_replace(
-				array ('/\>[^\S ]+' . $mod, 
-					   '/[^\S ]+\<' . $mod, 
-					   '/(\s)+'     . $mod, 
-					   '/"\n>'      . $mod, 
-					   '/"\n'       . $mod), 
+				array ('/\>[^\S ]+' . $enc_mod, 
+					   '/[^\S ]+\<' . $enc_mod, 
+					   '/(\s)+'     . $enc_mod, 
+					   '/"\n>'      . $enc_mod, 
+					   '/"\n'       . $enc_mod), 
 				array ('>', '<', '\\1', '">', '" '), 
-				$pre_begin, 100000);
+				$pre_begin, $this->max_replace);
 			$pre_begin = preg_replace(
-				'/(?=<!--)([\s\S]*?)-->' . $mod, 
-				'', $pre_begin, 100000);
+				'/(?=<!--)([\s\S]*?)-->' . $enc_mod, 
+				'', $pre_begin, $this->max_replace);
 			$buffer .= $pre_begin.$post_begin;
 		}
-		$buffer = str_replace(array ($linefeed . '<script', $linefeed . '<style', 
-		                             '*/' . $linefeed     , $this->begin), 
-							  array ('<script'             ,  '<style', 
-							         '*/'                  , ''), 
-							  $buffer);
+		$buffer = str_replace(
+			array ($linefeed . '<script', $linefeed . '<style', 
+		            	'*/' . $linefeed, $l_begin), 
+			array ('<script'            ,  '<style', 
+						 '*/'           , ''), 
+			$buffer);
 
 		return ( $buffer );
 	}
