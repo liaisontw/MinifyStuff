@@ -160,7 +160,7 @@ class minifyStuff_Admin {
 						</td>
 					</tr>
 					<tr class="minify_stuff_active">
-						<th><label><?php esc_html_e( 'Minify Stuff', 'minifystuff' ); ?></label></th>
+						<th><label><?php esc_html_e( "Minify Stuff (Remove comments of HTML, JavaScript and CSS)", 'minifystuff' ); ?></label></th>
 						<td>
 							<input type="radio" name="minify_stuff_active" value="yes"<?php echo ($minify_stuff_active=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Enable', 'minifystuff' ); ?></strong></span>
 							<input type="radio" name="minify_stuff_active" value="no"<?php echo ($minify_stuff_active!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'Disable', 'minifystuff' ); ?></span>
@@ -169,28 +169,7 @@ class minifyStuff_Admin {
 							<p class="description"><?php esc_html_e( 'Enable or disable Minify Stuff', 'minifystuff' ); ?></p>
 						</td>
 					</tr>
-					<tr class="minify_javascript minify_stuff_options">
-						<th><label><?php esc_html_e( 'Minify inline JavaScript', 'minifystuff' ); ?></label></th>
-						<td>
-							<input type="radio" name="minify_javascript" value="yes"<?php echo ($minify_javascript=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Yes', 'minifystuff' ); ?></strong></span>
-							<input type="radio" name="minify_javascript" value="no"<?php echo ($minify_javascript!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'No', 'minifystuff' ); ?></span>
-						</td>
-						<td>
-							<p class="description"><?php esc_html_e( 'Default "Yes"', 'minifystuff' ); ?></p>
-						</td>
-					</tr>
-					<tr class="minify_comments minify_stuff_options">
-						<th>
-							<label><?php esc_html_e( 'Remove comments of HTML, JavaScript and CSS', 'minifystuff' ); ?></label>
-						</th>
-						<td>
-							<input type="radio" name="minify_comments" value="yes"<?php echo ($minify_comments=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Yes', 'minifystuff' ); ?></strong></span>
-							<input type="radio" name="minify_comments" value="no"<?php echo ($minify_comments!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'No', 'minifystuff' ); ?></span>
-						</td>
-						<td>
-							<p class="description"><?php esc_html_e( 'Default "Yes"', 'minifystuff' ); ?></p>
-						</td>
-					</tr>
+					
 			<p class="submit">
 				<input type="submit" name="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'minifystuff' ) ?>" />
 			</p>

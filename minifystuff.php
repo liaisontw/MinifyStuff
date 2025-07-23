@@ -8,20 +8,20 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              https://github.com/liaisontw/
+ * @link              https://github.com/liaisontw/MinifyStuff
  * @since             1.0.0
  * @package           minifyStuff
  *
  * @wordpress-plugin
  * Plugin Name:       Minify Stuff
- * Plugin URI:        https://github.com/liaisontw/minifyStuff
+ * Plugin URI:        https://github.com/liaisontw/MinifyStuff
  * Description:       Minify HTML CSS javascript files
  * Version:           1.0.0
  * Author:            Liaison Chang
  * Author URI:        https://github.com/liaisontw//
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       minifyStuff
+ * Text Domain:       minifystuff
  * Domain Path:       /languages
  */
 
