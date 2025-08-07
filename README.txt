@@ -8,16 +8,19 @@ Stable tag: 1.0.0
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-
-## Description  
 MinifyStuff plugin removes HTML, CSS and JavaScript comments
 and also removes invisible (but downloaded) characters 
 (space, tab, return key, etc.).
 
-### Build Status  
+== Description ==
+MinifyStuff plugin removes HTML, CSS and JavaScript comments
+and also removes invisible (but downloaded) characters 
+(space, tab, return key, etc.).
+
+== Build Status ==
 
 
-### Development  
+== Development ==
 [MinifyStuff](https://github.com/liaisontw/MinifyStuff)  
 
 

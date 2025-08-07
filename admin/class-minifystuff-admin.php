@@ -149,28 +149,28 @@ class minifyStuff_Admin {
 				<tbody>
 					<tr>
 						<td>
-							<p class="description"><?php esc_html_e( 'Option', 'minifystuff' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Option', 'minify-stuff' ); ?></p>
 						</td>
 						<td>
-							<p class="description"><?php esc_html_e( 'Setting', 'minifystuff' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Setting', 'minify-stuff' ); ?></p>
 						</td>
 						<td>
-							<p class="description"><?php esc_html_e( 'Description', 'minifystuff' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Description', 'minify-stuff' ); ?></p>
 						</td>
 					</tr>
 					<tr class="minify_stuff_active">
-						<th><label><?php esc_html_e( "Minify Stuff (Remove comments of HTML, JavaScript and CSS)", 'minifystuff' ); ?></label></th>
+						<th><label><?php esc_html_e( "Minify Stuff (Remove comments of HTML, JavaScript and CSS)", 'minify-stuff' ); ?></label></th>
 						<td>
-							<input type="radio" name="minify_stuff_active" value="yes"<?php echo ($minify_stuff_active=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Enable', 'minifystuff' ); ?></strong></span>
-							<input type="radio" name="minify_stuff_active" value="no"<?php echo ($minify_stuff_active!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'Disable', 'minifystuff' ); ?></span>
+							<input type="radio" name="minify_stuff_active" value="yes"<?php echo ($minify_stuff_active=='yes' ? ' checked' : ''); ?>><span class="value"><strong><?php esc_html_e( 'Enable', 'minify-stuff' ); ?></strong></span>
+							<input type="radio" name="minify_stuff_active" value="no"<?php echo ($minify_stuff_active!='yes' ? ' checked' : ''); ?>><span class="value"><?php esc_html_e( 'Disable', 'minify-stuff' ); ?></span>
 						</td>
 						<td>
-							<p class="description"><?php esc_html_e( 'Enable or disable Minify Stuff', 'minifystuff' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Enable or disable Minify Stuff', 'minify-stuff' ); ?></p>
 						</td>
 					</tr>
 					
 			<p class="submit">
-				<input type="submit" name="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'minifystuff' ) ?>" />
+				<input type="submit" name="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'minify-stuff' ) ?>" />
 			</p>
 		</form>
 	</div>
