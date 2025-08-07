@@ -52,7 +52,6 @@ class minifyStuff_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		add_action( 'admin_menu', array($this, 'admin_menu') );
-		//add_action( 'admin_menu', 'teckel_minify_stuff_menu' );
 	}
 
 	/**

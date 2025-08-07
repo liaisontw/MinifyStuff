@@ -26,22 +26,15 @@
  */
 class minifyStuff_i18n {
 
-
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    1.0.0
+	/*
+	 * load_plugin_textdomain() has been discouraged 
+	 * since WordPress version 4.6. 
+	 * When your plugin is hosted on WordPress.org, 
+	 * you no longer need to manually include this 
+	 * function call for translations under your plugin slug. 
+	 * WordPress will automatically load the translations 
+	 * for you as needed.
 	 */
-	public function load_plugin_textdomain() {
-
-		load_plugin_textdomain(
-			'minifyStuff',
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
-		);
-
-	}
-
 
 
 }
