@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 require_once __DIR__ . '/../public/class-minifystuff-public.php';
 //require_once __DIR__ . '../../../wp-load.php'; 
 
