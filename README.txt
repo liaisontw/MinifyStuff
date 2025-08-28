@@ -8,14 +8,22 @@ Stable tag: 1.0.0
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-MinifyStuff plugin removes HTML, CSS and JavaScript comments
+Minify-Stuff plugin removes HTML, CSS and JavaScript comments
 and also removes invisible (but downloaded) characters 
 (space, tab, return key, etc.).
 
 == Description ==
-MinifyStuff plugin removes HTML, CSS and JavaScript comments
+Minify-Stuff plugin removes HTML, CSS and JavaScript comments
 and also removes invisible (but downloaded) characters 
 (space, tab, return key, etc.).
+
+For an automatic installation through WordPress:
+1. Select Add New from the WordPress Plugins menu in the admin area.
+2. Search for 'minifystuff'.
+3. Click Install Now, then Activate Plugin.
+
+To enable or disable Minify-Stuff plugin, please go 'Minify Stuff' in the 'Settings'
+of wordpress website admininstrator dashboard.
 
 == Build Status ==
 
