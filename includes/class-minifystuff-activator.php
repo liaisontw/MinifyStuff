@@ -20,17 +20,19 @@
  * @subpackage minifyStuff/includes
  * @author     Liaison Chang <liaison.tw@gmail.com>
  */
-class minifyStuff_Activator {
+class minifyStuff_Activator
+{
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
-		add_option( 'minify_stuff_active', 'yes' );
-	}
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function activate()
+    {
+        add_option('minify_stuff_active', 'yes');
+    }
 
 }

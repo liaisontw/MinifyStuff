@@ -24,17 +24,18 @@
  * @subpackage minifyStuff/includes
  * @author     Liaison Chang <liaison.tw@gmail.com>
  */
-class minifyStuff_i18n {
+class minifyStuff_i18n
+{
 
-	/*
-	 * load_plugin_textdomain() has been discouraged 
-	 * since WordPress version 4.6. 
-	 * When your plugin is hosted on WordPress.org, 
-	 * you no longer need to manually include this 
-	 * function call for translations under your plugin slug. 
-	 * WordPress will automatically load the translations 
-	 * for you as needed.
-	 */
+    /*
+     * load_plugin_textdomain() has been discouraged 
+     * since WordPress version 4.6. 
+     * When your plugin is hosted on WordPress.org, 
+     * you no longer need to manually include this 
+     * function call for translations under your plugin slug. 
+     * WordPress will automatically load the translations 
+     * for you as needed.
+     */
 
 
 }

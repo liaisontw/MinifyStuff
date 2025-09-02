@@ -20,17 +20,19 @@
  * @subpackage minifyStuff/includes
  * @author     Liaison Chang <liaison.tw@gmail.com>
  */
-class minifyStuff_Deactivator {
+class minifyStuff_Deactivator
+{
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function deactivate() {
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function deactivate()
+    {
 
-	}
+    }
 
 }
