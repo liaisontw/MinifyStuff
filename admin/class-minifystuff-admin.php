@@ -110,40 +110,74 @@ class minifyStuff_Admin {
 	}
 
 	public function minify_stuff_menu_options() {
+		
 		$minify_stuff_active = get_option( 'minify_stuff_active' );
 		$minify_javascript = get_option( 'minify_javascript' );
 		$minify_comments = get_option( 'minify_comments' );
-		//$minify_stuff_active = 'yes';
-		//$minify_javascript = 'yes';
-		//$minify_comments = 'yes';
 		if ( !$minify_stuff_active ) $minify_stuff_active = 'yes';
 		if ( !$minify_javascript ) $minify_javascript = 'yes';
 		if ( !$minify_comments ) $minify_comments = 'yes';
-		if ( isset($_POST[ 'minify_stuff_submit_hidden' ]) && $_POST[ 'minify_stuff_submit_hidden' ] == 'Y' ) {
-			if ( isset( $_POST['minify_html_nonce'] ) && !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['minify_html_nonce'] ) ), 'minify-html-nonce' ) ) {
-				wp_die( esc_html( 'Form failed nonce verification.' ) );
+		
+		if ( current_user_can( 'manage_options' ) ) 
+		{
+			if (   isset($_POST[ 'minify_stuff_submit_hidden' ]) 
+				&& $_POST[ 'minify_stuff_submit_hidden' ] == 'Y' ) 
+			{ 
+				if (   isset( $_POST['minify_stuff_nonce'] )
+				    && wp_verify_nonce( 
+					   sanitize_text_field( wp_unslash( $_POST['minify_stuff_nonce'] ) ),
+					   'minify-stuff-nonce' ) 
+				   ) 
+				{
+					if ( isset( $_POST[ 'minify_stuff_active' ] ) ) {
+						$minify_stuff_active = filter_var ( 
+							wp_unslash( $_POST[ 'minify_stuff_active' ] ), 
+							FILTER_SANITIZE_FULL_SPECIAL_CHARS 
+						); 
+					} else {
+						$minify_stuff_active = 'yes';
+					}
+					if ( isset( $_POST[ 'minify_javascript' ] ) ) {
+						$minify_javascript = filter_var ( 
+							wp_unslash( $_POST[ 'minify_javascript' ] ), 
+							FILTER_SANITIZE_FULL_SPECIAL_CHARS 
+						); 
+					} else {
+						$minify_javascript = 'yes';
+					}
+					if ( isset( $_POST[ 'minify_comments' ] ) ) {
+						$minify_comments = filter_var ( 
+							wp_unslash( $_POST[ 'minify_comments' ] ), 
+							FILTER_SANITIZE_FULL_SPECIAL_CHARS ); 
+					} else {
+						$minify_comments = 'yes';
+					}
+					update_option( 'minify_stuff_active', $minify_stuff_active );
+					update_option( 'minify_javascript', $minify_javascript );
+					update_option( 'minify_comments', $minify_comments );
+					echo '<div class="updated"><p><strong>' . esc_html( 'Settings saved.' ) . '</strong></p></div>';
+				} else { 
+					wp_die( esc_html( 'Form failed nonce verification.' ) );   
+				}				 
 			}
-			if ( isset( $_POST[ 'minify_stuff_active' ] ) ) $minify_stuff_active = filter_var ( wp_unslash( $_POST[ 'minify_stuff_active' ] ), FILTER_SANITIZE_FULL_SPECIAL_CHARS ); else $minify_stuff_active = 'yes';
-			if ( isset( $_POST[ 'minify_javascript' ] ) ) $minify_javascript = filter_var ( wp_unslash( $_POST[ 'minify_javascript' ] ), FILTER_SANITIZE_FULL_SPECIAL_CHARS ); else $minify_javascript = 'yes';
-			if ( isset( $_POST[ 'minify_comments' ] ) ) $minify_comments = filter_var ( wp_unslash( $_POST[ 'minify_comments' ] ), FILTER_SANITIZE_FULL_SPECIAL_CHARS ); else $minify_comments = 'yes';
-			update_option( 'minify_stuff_active', $minify_stuff_active );
-			update_option( 'minify_javascript', $minify_javascript );
-			update_option( 'minify_comments', $minify_comments );
-			echo '<div class="updated"><p><strong>' . esc_html( 'Settings saved.' ) . '</strong></p></div>';
+			
 		}
+		
+
+
 	?>
-	<style>
-	#minify_stuff label {white-space:nowrap}
-	#minify_stuff input[type="radio"] {margin-left:15px}
-	#minify_stuff input[type="radio"]:first-child {margin-left:0}
-	#minify_stuff .value {display:inline-block;min-width:50px}
-	#minify_stuff p {font-size:1.1em;font-weight:600}
-	@media screen and (max-width: 500px) {#minify_stuff label {white-space:normal}}
-	</style>
+	
 	<div class="wrap" id="minify_stuff">
 		<h2>Minify HTML Settings</h2>
+		<p>
+				Notice: 
+				This plugin may breaks server based caching such as nginx and Varnish.
+				If your WordPress hosts apply server based caching, 
+				please do not apply this plugin or the website visitors will 
+				have a non-cached view of the website
+		</p>
 		<form name="form1" method="post" action="">
-			<input type="hidden" name="minify_stuff_nonce" value="<?php echo esc_html( wp_create_nonce('minify-html-nonce') ); ?>">
+			<input type="hidden" name="minify_stuff_nonce" value="<?php echo esc_html( wp_create_nonce('minify-stuff-nonce') ); ?>">
 			<input type="hidden" name="minify_stuff_submit_hidden" value="Y">
 			<table border="1" class="form-table" >
 				<tbody>

@@ -2,3 +2,10 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+#minify_stuff label {white-space:nowrap}
+#minify_stuff input[type="radio"] {margin-left:15px}
+#minify_stuff input[type="radio"]:first-child {margin-left:0}
+#minify_stuff .value {display:inline-block;min-width:50px}
+#minify_stuff p {font-size:1.1em;font-weight:600}
+@media screen and (max-width: 500px) {#minify_stuff label {white-space:normal}}

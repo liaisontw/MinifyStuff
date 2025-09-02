@@ -25,6 +25,12 @@ For an automatic installation through WordPress:
 To enable or disable Minify-Stuff plugin, please go 'Minify Stuff' in the 'Settings'
 of wordpress website admininstrator dashboard.
 
+Notice: 
+This plugin may breaks server based caching such as nginx and Varnish.
+If your WordPress hosts apply server based caching, 
+please do not apply this plugin or the website visitors will 
+have a non-cached view of the website
+
 == Build Status ==
 
 
