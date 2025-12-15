@@ -220,9 +220,35 @@ class minifyStuff_Public
             return ( $buffer );
         }
 
+// Explicitly creating a new session.
+// Note that severity is optional and defaults to 0.
+do_action( 'wp_logger_create_session', 'minify-stuff', 'message', 'new session', 0 );
+
+	do_action( 'wp_logger_add', 'minify-stuff', 'message', 'session test 1', 1 );
+	do_action( 'wp_logger_add', 'minify-stuff', 'message', 'session test 2', 2 );
+
+// Implicitly ends current session by creating a new session.
+do_action( 'wp_logger_create_session', 'minify-stuff', 'message', 'new session', 0 );
+
+	do_action( 'wp_logger_add', 'minify-stuff', 'message', 'session test 3', 3 );
+	do_action( 'wp_logger_add', 'minify-stuff', 'message', 'session test 4', 4 );
+
+// Explicitly end the current session.
+do_action( 'wp_logger_end_session' );
+
+
+        do_action( 'wp_logger_add', 'minify-stuff', 'message', 'step 1', 1 );
+        do_action( 'wp_logger_add', 'wp-logger-test', 'message', 'Hello World! 1', 1 );
+        do_action( 'wp_logger_add', 'wp-logger-test', 'message', 'Hello World! 2', 2 );
+        do_action( 'wp_logger_add', 'wp-logger-test', 'message', 'Hello World! 3', 3 );
+        do_action( 'wp_logger_add', 'wp-logger-test', 'message', 'Hello World! 4', 4 );
+        do_action( 'wp_logger_add', 'wp-logger-test', 'message', 'Hello World! 5', 5 );
+        //do_action( 'wp_logger_add', 'wp-logger-test', 'message', 'Hello World!', 6 );
+
         //step 2: utf-8 encode detection
         $enc_mod = ( mb_detect_encoding($buffer, 'UTF-8', true) ) ? '/u' : '/s';
         $this->utf8_mod = $enc_mod;
+        do_action( 'wp_logger_add', 'minify-stuff', 'message', 'step 2', 2 );
 
         //step 3: compress \r\n\t to \n
         $buffer = str_replace(
@@ -230,6 +256,7 @@ class minifyStuff_Public
             array (             $linefeed,       ''), 
             $buffer
         );
+        do_action( 'wp_logger_add', 'minify-stuff', 'message', 'step 3', 3 );
 
         //step 4-1: add begin-stop token for js, css
         $buffer = str_ireplace(
@@ -239,6 +266,8 @@ class minifyStuff_Public
                     $l_begin.'<style'  ,  '/style>'.$l_stop), 
             $buffer
         );
+
+        do_action( 'wp_logger_add', 'minify-stuff', 'message', 'step 4', 4 );
 
         //step 4-2: split entire buffer into array by stop token
         $split_array = explode($l_stop, $buffer);
